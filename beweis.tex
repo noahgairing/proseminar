@@ -1,0 +1,125 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath, amssymb, amsthm}
+
+\usepackage{lmodern}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\usepackage{hyperref}
+
+\newtheoremstyle{definition}
+  {}
+  {}
+  {}
+  {}
+  {\bfseries}
+  {.}
+  { }
+  {}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+
+\def\H{\mathcal{H}}
+\def\N{\mathbb{N}}
+\def\R{\mathbb{R}}
+\def\K{\mathcal{K}}
+
+\title{Hausdorff-Kompaktheit kompakter Mengensysteme (Entwurf)}
+\author{Noah Gairing}
+\date{Oktober 2025}
+
+\begin{document}
+
+\maketitle
+
+Im vorherigen Vortrag wurde die Hausdorff-Metrik, verallgemeinert auf nichtleeren Teilmengen eines metrischen Raumes, eingeführt. In diesem Vortrag betrachten wir sie stets im Fall $\R^m$ mit der euklidischen Norm $||\cdot||_2$.
+
+\begin{definition}[Hausdorff-Metrik, $\R^m$]
+  Sei $m \in \N_{>0}$. Für nichtleere Teilmengen $A, B \subset \R^m$ definieren wir die Hausdorff-Distanz zwischen $A$ und $B$ durch
+  \[
+    d_\H(A,B) := \max\Bigl\{ \sup_{a \in A} \inf_{b \in B} ||a-b||_2, \;\; \sup_{b \in B} \inf_{a \in A} ||b-a||_2 \Bigr\}.
+  \]
+
+  Einfacher gesagt ist die Hausdorff-Distanz das Supremum von wie weit ein Punkt aus einer Menge von der anderen entfernt sein kann.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:wuerfel-approx}
+  Sei $W \subset \R^m$ ein abgeschlossener Würfel mit Kantenlänge $L > 0$. Dann gilt für alle $x, y \in W$ die Abschätzung
+  \[
+    ||x - y||_2 \leq L \cdot \sqrt{m}.
+  \]
+\end{proposition}
+\begin{proof}
+  Seien $x, y \in W$ mit $x = (x_1, \ldots, x_m)$ und $y = (y_1, \ldots, y_m)$. Dann gilt
+  \[
+    ||x - y||_2 = \left( \sum_{i=1}^m (x_i - y_i)^2 \right)^{1/2} \leq \left( \sum_{i=1}^m L^2 \right)^{1/2} = (L^2 \cdot m)^{1/2} = L \cdot \sqrt{m}.
+  \]
+\end{proof}
+
+\begin{theorem}
+  \label{thm:h-komp-01}
+  Sei $m \in \N_{>0}$ und sei $(K_n)_{n \in \N}$ eine Folge kompakter Mengen in $[0,1]^m$. Dann gibt es eine kompakte Menge $\emptyset \neq K \subset [0,1]^m$ und eine Teilfolge $(K_{n_i})_{i \in \N}$ mit $K_{n_i} \xrightarrow{i \to \infty} K$ bzgl. der Hausdorff-Metrik.
+\end{theorem}
+\begin{proof}
+  Sei $Q_0 := [0,1]^m$, sowie $(K^{(0)}_n)_{n \in \N} := (K_n)_{n \in \N}$.
+  Für $i \in \N$ definieren wir
+  \[
+    W_i := \left\{ \left[\frac{a_1}{2^i}, \frac{a_1 + 1}{2^i}\right] \times \cdots \times \left[\frac{a_m}{2^i}, \frac{a_m + 1}{2^i}\right] : a_1, \ldots, a_m \in \{0, \ldots, 2^i - 1\}\right\}.
+  \]
+  als Zerlegung von $[0,1]^m$ in $2^{i \cdot m}$ Würfel derselben Maße. Dazu gebe es eine beliebige Bijektion $\varphi_i : \{1, \ldots, 2^{i \cdot m}\} \to W_i$.
+
+  Beginnend mit $i = 1$ und dann für $i = 2, 3, \ldots$ iterieren wir nun über $j = 1, \ldots, 2^{i \cdot m}$:
+  \begin{itemize}
+    \item Setze $Q_i^{(0)} := \emptyset$ und $(K_n^{[i, 0]})_{n \in \N} := (K_n^{(i-1)})_{n \in \N}$.
+    \item Gibt es unendlich viele $n \in \N$ mit $K_n^{[i, j-1]} \cap \varphi_i(j) \neq \emptyset$, so setzen wir
+    \[
+    Q_i^{(j)} := Q_i^{(j-1)} \cup \varphi_i(j).
+    \]
+    Zudem definieren wir $(K_n^{[i, j]})_{n \in \N}$ als Teilfolge von $(K_n^{[i, j-1]})_{n \in \N}$, wo genau die Glieder $K_n^{[i, j-1]}$ mit $K_n^{[i, j-1]} \cap \varphi_i(j) \neq \emptyset$ beibehalten werden.
+    \item Gibt es nich unendlich viele $n \in \N$ wie im letzten Punkt, so setzen wir $Q_i^{(j)} := Q_i^{(j-1)}$, und definieren $(K_n^{[i, j]})_{n \in \N}$ als Teilfolge von $(K_n^{[i, j-1]})_{n \in \N}$, wo genau die Glieder $K_n^{[i, j-1]}$ mit $K_n^{[i, j-1]} \cap \varphi_i(j) = \emptyset$ beibehalten werden.
+  \end{itemize}
+  Schließlich setzen wir $Q_i := Q_i^{(2^{i \cdot m})}$ und $(K_n^{(i)})_{n \in \N} := (K_n^{[i, 2^{i \cdot m}]})_{n \in \N}$. Dann folgt für alle $i \in \N_{>0}$:
+  \begin{itemize}
+    \item $(K_n^{(i)})_{n \in \N}$ ist eine Teilfolge von $(K_n^{(i-1)})_{n \in \N}$, da $(K_n^{(i)})_{n \in \N} \equiv (K_n^{[i, 2^{i \cdot m}]})_{n \in \N}$ eine Teilfolge von $(K_n^{[i, 0]})_{n \in \N} \equiv (K_n^{(i-1)})_{n \in \N}$ ist.
+    \item $K_n^{(i)} \subset Q_i$ für alle $n \in \N$, da wir $Q_i$ so konstruiert haben, dass alle Elemente von $(K_n^{(i)})_{n \in \N}$ Teilmengen von $Q_i$ sind.
+    \item $Q_i \subset Q_{i-1}$. Für $i = 1$ ist dies klar, da $Q_0 = [0,1]^m$. Für ein $i > 1$ nehmen wir an, dass es ein $x \in Q_i$ gäbe mit $x \notin Q_{i-1}$. Dann gibt es $U \in \mathcal{U}(x)$ mit $U \cap Q_{i-1} = \emptyset$ wo für alle $n \in \N$ gilt $K_n^{(i-1)} \cap U = \emptyset$ und $K_n^{(i)} \cap U \neq \emptyset$. Dies steht im Widerspruch dazu, dass $(K_n^{(i)})_{n \in \N}$ eine Teilfolge von $(K_n^{(i-1)})_{n \in \N}$ ist.
+    \item $Q_i$ ist eine beschränkte, nichtleere Vereinigung von Würfeln aus $W_i$ und somit nach Heine-Borel kompakt.
+  \end{itemize}
+
+  Da die $Q_i$ kompakt, nichtleer, und $Q_i \subset Q_{i-1}$ für alle $i \in \N_{>0}$ sind, können wir die wohldefinierte kompakte Menge
+  \[
+    K := \bigcap_{i \in \N} Q_i \neq \emptyset
+  \]
+  definieren. Für alle $i \in \N_{>0}$ gilt nun $d_\H(Q_i, K) \leq 2^{-i} \cdot \sqrt{m}$. Dies folgt daraus, dass jeder Würfel in $W_i$ ein Element aus $K$ enthält. Aus Proposition \ref{prop:wuerfel-approx} mit Kantenlänge $2^{-i}$ folgt somit die Behauptung.
+  
+  Sei nun $(K_{n_i})_{i \in \N}$ durch $K_{n_i} := K_i^{(i)}$ für alle $i \in \N$ als Teilfolge von $(K_n)_{n \in \N}$ definiert. Wir zeigen nun, dass $K_{n_i} \xrightarrow{i \to \infty} K$ bzgl. der Hausdorff-Metrik gilt.
+  Sei dazu $\varepsilon > 0$. Wähle $i_0 \in \N$ mit $2^{-i_0} \cdot \sqrt{m} < \varepsilon$. Da $K \subset K_{n_i} \subset Q_i$ für alle $i \in \N$ gilt für alle $i \geq i_0$:
+  \[
+    d_\H(K_{n_i}, K) \leq d_\H(Q_i, K) \leq 2^{-i} \cdot \sqrt{m} < \varepsilon.
+  \]
+\end{proof}
+
+\begin{theorem}
+  Sei $m \in \N_{>0}$, und $U \subset \R^m$ nichtleer und beschränkt. Dann ist $\K(U)$, der Raum aller nichtleeren, kompakten Teilmengen von $U$, selbst kompakt bzgl. der Hausdorff-Metrik.
+\end{theorem}
+\begin{proof}
+  Da $U$ beschränkt ist wählen wir $M > 0$ mit $U \subset B_M(0) \subset [-M, M]^m$. Definieren wir den Homöomorphismus
+  \begin{align*}
+    \varphi : [-M, M]^m &\to [0,1]^m \\
+    x &\mapsto \frac{1}{2M} \cdot (x + (M, \ldots, M)).
+  \end{align*}
+  Dann gilt für alle $X \in K(U)$, dass $\varphi(X) \in \K([0,1]^m)$ ist. Sei $(K_n)_{n \in \N}$ eine beliebige Folge in $\K(U)$. Dann ist $(\varphi(K_n))_{n \in \N}$ eine Folge in $\K([0,1]^m)$. Nach Theorem \ref{thm:h-komp-01} gibt es eine Teilfolge $(\varphi(K_{n_i}))_{i \in \N}$ und eine kompakte Menge $\emptyset \neq K \subset [0,1]^m$ mit $\varphi(K_{n_i}) \xrightarrow{i \to \infty} K$ bzgl. der Hausdorff-Metrik. Dann konvergiert $(K_{n_i})_{i \in \N} \equiv (\varphi^{-1}(\varphi(K_{n_i})))_{i \in \N}$ gegen $\varphi^{-1}(K) \in \K(U)$ und die Behauptung folgt.
+\end{proof}
+
+\end{document}
